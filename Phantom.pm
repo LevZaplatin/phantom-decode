@@ -1,13 +1,12 @@
-package CCS::Phantom;
+package Phantom;
 
 #
 # Date:        10.12.2014
 # Author:      Zaplatin ICHI Lev (dev@ichi.su)
 # Description: Пакет для разбора NWU и NTF-файлов на составляющие
-# Version:     1.0.0
+# Version:     1.0.1
 # 
 
-use CCS::Utils;
 use DateTime;
 use bigint;
 
@@ -159,7 +158,8 @@ sub _parser_call_duration{
 	my $self = shift;
 	my $duration = $self->{call_end} - $self->{call_begin};
 	$self->{call_duration} = $duration;
-	$self->{human}->{call_duration} = CCS::Utils::second_to_time($duration);
+	my $datetime = DateTime->from_epoch( epoch => $duration);
+	$self->{human}->{call_duration} = $datetime->time();
 }
 
 # Получает телефона на который позвонили
@@ -233,7 +233,8 @@ sub _parser_call_dialing{
 	my $epoch = Math::BigInt->from_hex($str);
 	$epoch->bdiv(10000000);
 	$self->{call_dialing} = $epoch->bstr();
-	$self->{human}->{call_dialing} = CCS::Utils::second_to_time($epoch->bstr());
+	my $datetime = DateTime->from_epoch( epoch => $epoch->bstr());
+	$self->{human}->{call_dialing} = $datetime->time();
 }
 
 ##########################################################
